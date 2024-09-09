@@ -1,16 +1,14 @@
 // Creation of Function to calculate average sales
 
 function calculateAverageSales (salesFigures) {
-    if (sales.length === 0) return 0;
+    if (salesFigures.length === 0) return 0;
     const totalFigures= salesFigures.reduce((total, sales) => total + sales, 0); // Using .reduce() to calculate the total sales of elements
-    let averageSales = totalFigures / salesFigures.length; //calculate the average sales
-    return averageSales;   
+    return totalFigures / salesFigures.length; //calculate the average sales  
 }
 
 //Function to Determine Performance Rating
 
 function determinePerformanceRating(averageSales) {
-  
 
     if (averageSales > 10000) {
         return "Excellent";
@@ -44,3 +42,31 @@ function findTopAndBottomPerformers (salesPerson) {
         bottomPerformer, // returns the top and bottom performer properties
     };
 }
+
+// Combining functions to generate a performance report
+function generatePerformanceReport(salesInformation) {
+    const salesperson = salesInformation.map(person => {
+        const averageSales = calculateAverageSales(person.sales); // Computes the average sales for each salesperson
+        const rating = determinePerformanceRating(averageSales); // Assigns the performance rating to each salesperson
+
+        return {
+            name: person.name,
+            averageSales: averageSales,
+            performanceRating: rating,
+            totalSales: person.sales.reduce((sum, sale) => sum + sale, 0), // For findTopAndBottomPerformers
+        };
+    });
+
+    const { topPerformer, bottomPerformer } = findTopAndBottomPerformers(salesperson); // Identifies the top and bottom performers
+
+    return {
+        salesperson: salesperson.map(person => ({
+            name: person.name,
+            averageSales: person.averageSales,
+            performanceRating: person.performanceRating, // Generates a summary of the salesperson's name, average sales, and performance rating
+        })),
+        topPerformer: topPerformer ? topPerformer.name : "None",
+        bottomPerformer: bottomPerformer ? bottomPerformer.name : "None",
+    };
+}
+
